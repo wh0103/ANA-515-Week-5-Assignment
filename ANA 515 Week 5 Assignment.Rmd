@@ -1,0 +1,73 @@
+---
+title: "Visualization Activity"
+author: "William Halim"
+date: '2022-09-25'
+output:
+  html_document:
+    theme:
+      bootswatch: minty
+---
+
+# Section 1: Description of the data
+
+This is the data set which information about airlines and their safety incidents. The data is classified in safety incidents, fatal accidents, and fatalities. There are 2 duration of 1985 to 1999 and 2000 to 2014 for the range of 56 airlines.
+
+# Section 2: Read CSV
+```{r echo=TRUE}
+#using read.csv to read data from csv file from a URL, 
+url <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/airline-safety/airline-safety.csv"
+airline_safety1 <- read.csv(url)
+```
+
+```{r message=FALSE}
+#Libraries needed for analysis
+library(ggplot2)
+library(tidyverse)
+```
+
+# Section 3: Visualization 1 (Top 10 airlines by number of safety incidents for the period of 2000 - 2014)
+```{r echo=TRUE}
+pct_format = scales::percent_format(accuracy = .1) #label format
+top_safety_incidents_00_14 <- airline_safety1 %>% 
+  select(airline,incidents_00_14) %>% #selecting necessary columns
+  top_n(10, incidents_00_14) %>%  #selecting top 10 records
+  arrange(desc(incidents_00_14)) %>% #arranging records in decending order
+  ggplot(aes(x=reorder(airline,-incidents_00_14), y = incidents_00_14)) + #x and y axis data
+  geom_bar(stat = "identity", fill = "lightblue") + #defining chart type
+  geom_text(aes(label = sprintf('%d', incidents_00_14)), 
+            nudge_y =  1, size = 2.5) + #defining bar labels
+  xlab("Airlines") + #defining x axis label
+  ylab("Safety incidents(2000 to 2014)") + #defining y axis label
+  ggtitle("Safety incidents:00-14") + #defining plot title
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(color = "burlywood4", face = "bold"),
+        axis.title.y = element_text(color = "burlywood4", face = "bold"),
+        plot.title = element_text(color = "burlywood4", face = "bold.italic", hjust = 0.5))
+top_safety_incidents_00_14
+```
+
+## Note: This visualization gives information about the top 10 airlines which are safe to travel considering the airlines safety scores across the 2000 - 2014 period. From the plot we can visualize that Delta/Northwest and American airlines are the safest for the period of 2000 - 2014.
+
+# Section 4: Visualization 2 (Top 10 airlines by number of safety and incidents for the period of 1985 - 1999)
+
+```{r echo=TRUE}
+pct_format = scales::percent_format(accuracy = .1) #label format
+top_safety_incidents_85_99 <- airline_safety1 %>% 
+  select(airline,incidents_85_99) %>% #selecting necessary columns
+  top_n(10, incidents_85_99) %>%  #selecting top 10 records
+  arrange(desc(incidents_85_99)) %>% #arranging records in decending order
+  ggplot(aes(x=reorder(airline,-incidents_85_99), y = incidents_85_99)) + #x and y axis data
+  geom_bar(stat = "identity", fill = "lightblue") + #defining chart type
+  geom_text(aes(label = sprintf('%d', incidents_85_99)), 
+            nudge_y =  1, size = 2.5) + #defining bar labels
+  xlab("Airlines") + #defining x axis label
+  ylab("Safety incidents(1985 to 1999)") + #defining y axis label
+  ggtitle("Safety incidents:85-99") + #defining plot title
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(color = "burlywood4", face = "bold"),
+        axis.title.y = element_text(color = "burlywood4", face = "bold"),
+        plot.title = element_text(color = "burlywood4", face = "bold.italic", hjust = 0.5))
+top_safety_incidents_85_99
+```
+
+## Note: This visualization gives information about the top 10 airlines which are safe to travel considering the airlines safety scores across the 1985 - 1999 period. From the plot we can visualize that Aeroflot and Ethiopian airlines are the safest for the period of 1985 - 1999.
